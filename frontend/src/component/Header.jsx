@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const userData = useSelector((state) => state.user);
-  console.log(userData);
+  console.log(userData.email);
 
   const dispatch = useDispatch();
 
@@ -22,6 +22,8 @@ const Header = () => {
     dispatch(logoutRedux());
     toast.success("Logout successfully");
   };
+
+  // console.log(`${import.meta.env.VITE_REACT_APP_ADMIN_EMAIL}`);
   return (
     <div>
       <header className="fixed shadow-md w-full h-16 px-2 md:px-4 z-50 bg-white">
@@ -57,16 +59,16 @@ const Header = () => {
 
               {showMenu && (
                 <div className="absolute right-2 bg-white py-2  shadow drop-shadow-md flex flex-col min-w-[120px] text-center">
-                  <Link to={"newproduct"} className="whitespace-nowrap px-2">
-                    New Product
-                  </Link>
+                  {userData.email ===
+                    `${import.meta.env.VITE_REACT_APP_ADMIN_EMAIL}` && (
+                    <Link to={"newproduct"} className="whitespace-nowrap px-2">
+                      New Product
+                    </Link>
+                  )}
 
                   {userData.image ? (
-                    <p
-                      className="cursor-pointer px-2 text-white bg-red-400 "
-                      onClick={handleLogout}
-                    >
-                      Logout
+                    <p className="cursor-pointer px-2 " onClick={handleLogout}>
+                      Logout {} ({userData.firstName})
                     </p>
                   ) : (
                     <Link
@@ -76,6 +78,20 @@ const Header = () => {
                       Login
                     </Link>
                   )}
+                  <nav className="text-base md:text-lg flex flex-col md:hidden ">
+                    <Link to={""} className="px2 py-1">
+                      Home
+                    </Link>
+                    <Link to={"menu"} className="px2 py-1">
+                      Menu
+                    </Link>
+                    <Link to={"about"} className="px2 py-1">
+                      About
+                    </Link>
+                    <Link to={"contact"} className="px2 py-1">
+                      Contact
+                    </Link>
+                  </nav>
                 </div>
               )}
             </div>

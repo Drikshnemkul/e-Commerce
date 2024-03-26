@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
+const bcrypt = require("bcrypt");
 
 const app = express();
 app.use(cors());
@@ -24,11 +25,23 @@ const userSchema = mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    required: [true, "Please add a E-mail"],
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      "Please add a valid E-mail",
+    ],
   },
   phnNumber: Number,
   password: String,
-  confirmPassword: String,
+  // confirmPassword: String,
   image: String,
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
 //model
@@ -37,7 +50,7 @@ const userModel = mongoose.model("user", userSchema);
 // sign up
 app.post("/signup", async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
     console.log(req.body);
 
     // Check if the email already exists in the database
@@ -49,6 +62,8 @@ app.post("/signup", async (req, res) => {
         alert: false,
       });
     }
+    // Hash the password
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     // If the email doesn't exist, create a new user
     const newUser = new userModel(req.body);
@@ -84,6 +99,33 @@ app.post("/login", async (req, res) => {
     console.error(error);
     res.status(500).send({ message: "Internal server error" });
   }
+});
+
+//product section
+const schemaProduct = mongoose.Schema({
+  name: String,
+  category: String,
+  image: String,
+  price: String,
+  description: String,
+});
+
+const productModel = mongoose.model("product", schemaProduct);
+
+//save product in data
+//api
+app.post("/uploadProduct", async (req, res) => {
+  console.log(req.body);
+  const data = productModel(req.body);
+  const dataSave = await data.save();
+  console.log(dataSave);
+  res.send({ message: "Product uploaded successfully" });
+});
+
+//api to get product
+app.get("/product", async (req, res) => {
+  const data = await productModel.find({});
+  res.send(JSON.stringify(data));
 });
 
 //server is running

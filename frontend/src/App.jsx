@@ -16,7 +16,28 @@ import Login from "./page/Login.jsx";
 import Newproduct from "./page/Newproduct.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setDataProduct } from "./redux/productSlice.jsx";
+import Footer from "./page/Footer.jsx";
+
 function App() {
+  const dispatch = useDispatch();
+  const productData = useSelector((state) => state.product);
+
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_REACT_APP_SERVER_DOMAIN}/product`
+      );
+      const resData = res.data;
+      console.log(resData);
+      dispatch(setDataProduct(resData));
+    })();
+  }, []);
+  console.log(productData);
+
   return (
     <>
       <div>
@@ -25,6 +46,7 @@ function App() {
         <main className="pt-16 bg-slate-100 min-h-[calc(100vh)]">
           <Outlet />
         </main>
+        <Footer />
       </div>
     </>
   );
