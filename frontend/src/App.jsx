@@ -21,6 +21,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setDataProduct } from "./redux/productSlice.jsx";
 import Footer from "./page/Footer.jsx";
+import Cart from "./page/Cart.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -32,11 +33,11 @@ function App() {
         `${import.meta.env.VITE_REACT_APP_SERVER_DOMAIN}/product`
       );
       const resData = res.data;
-      console.log(resData);
+      // console.log(resData);
       dispatch(setDataProduct(resData));
     })();
   }, []);
-  console.log(productData);
+  // console.log(productData);
 
   return (
     <>
@@ -56,12 +57,14 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-      <Route path="menu" element={<Menu />} />
+      {/* <Route path="menu" element={<Menu />} /> */}
+      <Route path="menu/:filterby" element={<Menu />} />
       <Route path="about" element={<About />} />
       <Route path="contact" element={<Contact />} />
       <Route path="signup" element={<Signup />} />
       <Route path="login" element={<Login />} />
       <Route path="newproduct" element={<Newproduct />} />
+      <Route path="cart" element={<Cart />} />
     </Route>
   )
 );

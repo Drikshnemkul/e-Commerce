@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const userData = useSelector((state) => state.user);
-  console.log(userData.email);
+  // console.log(userData.email);
 
   const dispatch = useDispatch();
 
@@ -23,6 +23,7 @@ const Header = () => {
     toast.success("Logout successfully");
   };
 
+  const cartItemNumber = useSelector((state) => state.product.cartItem);
   // console.log(`${import.meta.env.VITE_REACT_APP_ADMIN_EMAIL}`);
   return (
     <div>
@@ -37,15 +38,17 @@ const Header = () => {
           <div className="flex items-center gap-4 md:gap-7">
             <nav className="gap-4 md:gap-6 text-base md:text-lg hidden md:flex">
               <Link to={""}>Home</Link>
-              <Link to={"menu"}>Menu</Link>
+              <Link to={"menu/65fcf009e5fd7ef11f2f5db7"}>Menu</Link>
               <Link to={"about"}>About</Link>
               <Link to={"contact"}>Contact</Link>
             </nav>
             <div className="text-2xl text-slate-600 relative">
-              <FiShoppingCart />
-              <div className="absolute -top-2 -right-2 text-white  bg-red-500 h-4  w-4 rounded-full m-0 p-0 text-sm  text-center">
-                0
-              </div>
+              <Link to={"cart"}>
+                <FiShoppingCart />
+                <div className="absolute -top-2 -right-2 text-white  bg-red-500 h-4  w-4 rounded-full m-0 p-0 text-sm  text-center">
+                  {cartItemNumber.length}
+                </div>
+              </Link>
             </div>
 
             <div className=" text-slate-600 " onClick={handleShowMenu}>
@@ -82,7 +85,10 @@ const Header = () => {
                     <Link to={""} className="px2 py-1">
                       Home
                     </Link>
-                    <Link to={"menu"} className="px2 py-1">
+                    <Link
+                      to={"menu/65fcf009e5fd7ef11f2f5db7"}
+                      className="px2 py-1"
+                    >
                       Menu
                     </Link>
                     <Link to={"about"} className="px2 py-1">

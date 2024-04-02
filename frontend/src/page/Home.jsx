@@ -5,16 +5,17 @@ import CardFeature from "../component/CardFeature";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { useRef } from "react";
 import FilterProduct from "../component/FilterProduct";
+import AllProduct from "../component/AllProduct";
 
 const Home = () => {
   const productData = useSelector((state) => state.product.productList);
-  console.log(productData);
+  // console.log(productData);
   const homeProductCartList = productData.slice(0, 6);
   const homeProductCartListVegetables = productData.filter(
     (el) => el.category === "vegetables",
     []
   );
-  console.log(homeProductCartListVegetables);
+  // console.log(homeProductCartListVegetables);
   const loadingArray = new Array(4).fill(null);
   const loadingArrayFeatures = new Array(10).fill(null);
 
@@ -26,24 +27,6 @@ const Home = () => {
 
   const preveProduct = () => {
     slideProductRef.current.scrollLeft -= 200;
-  };
-
-  const categoryList = [...new Set(productData.map((el) => el.category))];
-  console.log(categoryList);
-
-  //filter data display
-  const [dataFilter, setDataFilter] = useState([]);
-  useEffect(() => {
-    setDataFilter(productData);
-  }, [productData]);
-
-  const handleFilterProduct = (category) => {
-    const filter = productData.filter(
-      (el) => el.category.toLowerCase() === category.toLowerCase()
-    );
-    setDataFilter(() => {
-      return [...filter];
-    });
   };
 
   return (
@@ -81,6 +64,7 @@ const Home = () => {
                   return (
                     <HomeCard
                       key={el._id}
+                      id={el._id}
                       image={el.image}
                       name={el.name}
                       // price={el.price}
@@ -89,7 +73,9 @@ const Home = () => {
                   );
                 })
               : loadingArray.map((el, index) => {
-                  return <HomeCard key={index} loading={"loading..."} />;
+                  return (
+                    <HomeCard key={index + "loading"} loading={"loading..."} />
+                  );
                 })}
           </div>
         </div>
@@ -123,7 +109,8 @@ const Home = () => {
               ? homeProductCartListVegetables.map((el) => {
                   return (
                     <CardFeature
-                      key={el._id}
+                      key={el._id + "vegetables"}
+                      id={el._id}
                       name={el.name}
                       category={el.category}
                       price={el.price}
@@ -131,43 +118,15 @@ const Home = () => {
                     />
                   );
                 })
-              : loadingArrayFeatures.map((el) => (
-                  <CardFeature loading="loading..." />
+              : loadingArrayFeatures.map((el, index) => (
+                  <CardFeature
+                    key={index + "cartLoading"}
+                    loading="loading..."
+                  />
                 ))}
           </div>
         </div>
-
-        <div className="my-5">
-          <h2 className="font-bold text-2xl text-slate-800 mb-4 ">
-            Filter By Category
-          </h2>
-
-          <div className=" flex gap-4 justify-center overflow-scroll scrollbar-none">
-            {categoryList[0] &&
-              categoryList.map((el) => {
-                return (
-                  <FilterProduct
-                    category={el}
-                    onClick={() => handleFilterProduct(el)}
-                  />
-                );
-              })}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 my-4">
-            {dataFilter.map((el) => {
-              return (
-                <CardFeature
-                  key={el._id}
-                  image={el.image}
-                  name={el.name}
-                  category={el.category}
-                  price={el.price}
-                />
-              );
-            })}
-          </div>
-        </div>
+        <AllProduct heading={"Filter By Category"} />
       </div>
     </>
   );
