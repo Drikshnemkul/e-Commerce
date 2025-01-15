@@ -52,7 +52,7 @@ const Cart = () => {
             <div className="w-full max-w-md bg-slate-100 ml-auto mr-auto">
               <div className="pb-8">
                 <h2 className="bg-blue-500 text-white p-2 text-lg font-bold">
-                  Sub-Total
+                  Order Summary
                 </h2>
                 <div className="flex w-full py-2 text-lg border-b">
                   <p>Total Quantity:</p>

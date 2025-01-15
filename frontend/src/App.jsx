@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDataProduct } from "./redux/productSlice.jsx";
 import Footer from "./page/Footer.jsx";
 import Cart from "./page/Cart.jsx";
+import ScrollToTop from "./component/ScrollToTop.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
   return (
     <>
       <div>
+        <ScrollToTop />
         <ToastContainer />
         <Header />
         <main className="pt-16 bg-slate-100 min-h-[calc(100vh)]">
@@ -57,6 +59,7 @@ export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
+      <Route path="/home" element={<Home />} />
       {/* <Route path="menu" element={<Menu />} /> */}
       <Route path="menu/:filterby" element={<Menu />} />
       <Route path="about" element={<About />} />

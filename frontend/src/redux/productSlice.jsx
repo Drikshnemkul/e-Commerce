@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
+// Load initial cart data from localStorage
+const storedCart = JSON.parse(localStorage.getItem("cart"));
 const initialState = {
   productList: [],
-  cartItem: [],
+  cartItem: storedCart || [],
 };
 
 export const productSlice = createSlice({
@@ -11,12 +13,17 @@ export const productSlice = createSlice({
   initialState,
   reducers: {
     setDataProduct: (state, action) => {
-      // console.log(action);
       state.productList = [...action.payload];
     },
-
     addCartItem: (state, action) => {
-      // console.log(action);
+      // Check if the user is logged in
+      const isLoggedIn = true;
+
+      if (!isLoggedIn) {
+        toast.error("Please login to add items to the cart");
+        return;
+      }
+
       const check = state.cartItem.some((el) => el._id === action.payload._id);
 
       if (check) {
@@ -28,26 +35,29 @@ export const productSlice = createSlice({
           ...state.cartItem,
           { ...action.payload, qty: 1, total: total },
         ];
+        // Update localStorage
+        localStorage.setItem("cart", JSON.stringify(state.cartItem));
       }
     },
     deleteCartItem: (state, action) => {
-      console.log(action.payload);
       toast.success("Product deleted from cart");
-      const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      console.log(index);
-      state.cartItem.splice(index, 1);
+      const updatedCart = state.cartItem.filter(
+        (item) => item._id !== action.payload
+      );
+      state.cartItem = updatedCart;
+      // Update localStorage
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
     },
     increaseQty: (state, action) => {
       const index = state.cartItem.findIndex((el) => el._id === action.payload);
       let qty = state.cartItem[index].qty;
       const qtyInc = ++qty;
       state.cartItem[index].qty = qtyInc;
-
       const price = state.cartItem[index].price;
-
       const total = price * qtyInc;
-
       state.cartItem[index].total = total;
+      // Update localStorage
+      localStorage.setItem("cart", JSON.stringify(state.cartItem));
     },
     decreaseQty: (state, action) => {
       const index = state.cartItem.findIndex((el) => el._id === action.payload);
@@ -57,14 +67,16 @@ export const productSlice = createSlice({
         state.cartItem[index].qty = qtyDec;
         const price = state.cartItem[index].price;
         const total = price * qtyDec;
-
         state.cartItem[index].total = total;
+        // Update localStorage
+        localStorage.setItem("cart", JSON.stringify(state.cartItem));
       }
     },
-
     clearCart: (state) => {
       state.cartItem = [];
       toast.success("Cart cleared");
+      // Update localStorage
+      localStorage.removeItem("cart");
     },
   },
 });

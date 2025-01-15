@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+// import logo from "../assets/logo.png";
+import logo from "../assets/android-chrome-512x512.png";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +14,7 @@ const Header = () => {
   // console.log(userData.email);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowMenu = () => {
     setShowMenu((preve) => !preve);
@@ -21,6 +23,7 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logoutRedux());
     toast.success("Logout successfully");
+    navigate("/");
   };
 
   const cartItemNumber = useSelector((state) => state.product.cartItem);
@@ -31,14 +34,19 @@ const Header = () => {
         {/* desktop  */}
         <div className="flex items-center h-full justify-between">
           <Link to={""}>
-            <div className="h-10">
-              <img src={logo} className="h-full" alt="logo" />
+            <div className="h-10 flex gap-4 items-center">
+              <img src={logo} className="h-full " alt="logo" />
+              <p className=" inset-1/4 font-sans font-bold italic text-2xl text-red-800 ">
+                Grocery Shop
+              </p>
+
+              {/* <img src={logo} className="h-full" alt="logo" /> */}
             </div>
           </Link>
           <div className="flex items-center gap-4 md:gap-7">
             <nav className="gap-4 md:gap-6 text-base md:text-lg hidden md:flex">
-              <Link to={""}>Home</Link>
-              <Link to={"menu/65fcf009e5fd7ef11f2f5db7"}>Menu</Link>
+              <Link to={"/"}>Home</Link>
+              <Link to={"menu/65fcf009e5fd7ef11f2f5db7"}>Products</Link>
               <Link to={"about"}>About</Link>
               <Link to={"contact"}>Contact</Link>
             </nav>

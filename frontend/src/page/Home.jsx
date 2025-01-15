@@ -6,6 +6,7 @@ import { GrPrevious, GrNext } from "react-icons/gr";
 import { useRef } from "react";
 import FilterProduct from "../component/FilterProduct";
 import AllProduct from "../component/AllProduct";
+import Slidebar from "../component/Slidebar";
 
 const Home = () => {
   const productData = useSelector((state) => state.product.productList);
@@ -13,6 +14,10 @@ const Home = () => {
   const homeProductCartList = productData.slice(0, 6);
   const homeProductCartListVegetables = productData.filter(
     (el) => el.category === "vegetables",
+    []
+  );
+  const homeProductCartListFruits = productData.filter(
+    (el) => el.category === "fruits",
     []
   );
   // console.log(homeProductCartListVegetables);
@@ -48,9 +53,8 @@ const Home = () => {
               <span className="text-red-700 text">Your Home</span>{" "}
             </h2>
             <p className="py-3 text-base ">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam
-              eligendi itaque necessitatibus aspernatur. Reprehenderit ipsa
-              eveniet voluptates facilis error hic architecto recusandae fugiat
+              "Bringing Freshness to Your Doorstep: Your Trusted Source for
+              Quality Groceries, Conveniently Delivered!"
             </p>
 
             <button className="font-bold bg-red-500 text-slate-200 py-1 px-4 rounded-md">
@@ -80,24 +84,17 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="">
+        <div className="my-5">
           <div className="flex w-full items-center">
             <h2 className="font-bold text-2xl text-slate-800 mb-4 ">
               Fresh Vegetables
             </h2>
             <div className="ml-auto flex gap-4">
-              <button
-                onClick={preveProduct}
-                className="bg-slate-300 hover:bg-slate-400 text-lg  p-1 rounded"
-              >
-                <GrPrevious />
-              </button>
-              <button
-                onClick={nextProduct}
-                className="bg-slate-300 hover:bg-slate-400 text-lg p-1 rounded "
-              >
-                <GrNext />
-              </button>
+              <Slidebar
+                scrollRef={slideProductRef}
+                nextProduct={nextProduct}
+                preveProduct={preveProduct}
+              />
             </div>
           </div>
 
@@ -126,7 +123,47 @@ const Home = () => {
                 ))}
           </div>
         </div>
-        <AllProduct heading={"Filter By Category"} />
+
+        <div className="">
+          <div className="flex w-full items-center">
+            <h2 className="font-bold text-2xl text-slate-800 mb-4 ">
+              Fresh Fruits
+            </h2>
+            <div className="ml-auto flex gap-4">
+              <Slidebar
+                scrollRef={slideProductRef}
+                nextProduct={nextProduct}
+                preveProduct={preveProduct}
+              />
+            </div>
+          </div>
+
+          <div
+            className="flex gap-5 overflow-scroll scrollbar-none scroll-smooth transition-all "
+            ref={slideProductRef}
+          >
+            {homeProductCartListFruits[0]
+              ? homeProductCartListFruits.map((el) => {
+                  return (
+                    <CardFeature
+                      key={el._id + "fruits"}
+                      id={el._id}
+                      name={el.name}
+                      category={el.category}
+                      price={el.price}
+                      image={el.image}
+                    />
+                  );
+                })
+              : loadingArrayFeatures.map((el, index) => (
+                  <CardFeature
+                    key={index + "cartLoading"}
+                    loading="loading..."
+                  />
+                ))}
+          </div>
+        </div>
+        {/* <AllProduct heading={"Filter By Category"} /> */}
       </div>
     </>
   );
